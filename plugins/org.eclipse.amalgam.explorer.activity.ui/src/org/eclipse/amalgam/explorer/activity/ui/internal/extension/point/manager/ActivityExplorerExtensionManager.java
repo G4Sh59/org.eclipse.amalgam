@@ -163,25 +163,15 @@ public class ActivityExplorerExtensionManager {
      * @throws InvalidActivityException
      */
     private static CommonActivityExplorerPage accept(CommonActivityExplorerPage page, IConfigurationElement element) throws InvalidActivityExplorerIndexException {
-
         // Never accept null page
         if (page == null) {
-            StringBuilder message = new StringBuilder();
-            message.append("ActivityExplorerExtensionManager.accept(...) _ "); //$NON-NLS-1$
-            message.append("An error occured while instantianting the class of contribution "); //$NON-NLS-1$
-            message.append(ActivityExplorerExtensionManager.getId(element));
-            throw new NullPointerException(message.toString());
+            String id = ActivityExplorerExtensionManager.getId(element);
+            throw new NullPointerException(String.format("ActivityExplorerExtensionManager.accept(...) _ An error occured while instantianting the class of contribution %s", id));
         }
-
-        // Never accept negatif index for pages
+        // Never accept negative index for pages
         if (page.getPosition() < 0) {
-            StringBuilder message = new StringBuilder();
-            message.append("ActivityExplorerExtensionManager.accept(...) _ "); //$NON-NLS-1$
-            message.append("The page "); //$NON-NLS-1$
-            message.append(page.getId()); // $NON-NLS-1$
-            message.append(" has negatif index. "); //$NON-NLS-1$
-            message.append("Only pages win an index upper or equal to zero are allowed"); //$NON-NLS-1$
-            throw new InvalidActivityExplorerIndexException(message.toString());
+            String message = String.format("ActivityExplorerExtensionManager.accept(...) _ The page %s has negative index. Only pages with an index upper or equal to zero are allowed.", page.getId()); //$NON-NLS-1$
+            throw new InvalidActivityExplorerIndexException(message);
         }
         return page;
     }
@@ -200,24 +190,14 @@ public class ActivityExplorerExtensionManager {
             } catch (InvalidActivityExplorerIndexException e) {
                 ActivityExplorerActivator.getDefault().getLog().log(new Status(IStatus.WARNING, ActivityExplorerActivator.ID, e.getMessage()));
             } catch (NumberFormatException e) {
-                StringBuilder message = new StringBuilder();
-                message.append("ActivityExplorerExtensionManager.getAllPages(...) _ "); //$NON-NLS-1$
-                message.append("The contribution "); //$NON-NLS-1$
-                message.append(ActivityExplorerExtensionManager.getId(extension));
-                message.append(" has wrong index format ("); //$NON-NLS-1$
-                message.append(ActivityExplorerExtensionManager.getIndex(extension));
-                message.append("). Only 0 or positive integers are valid"); //$NON-NLS-1$
-                ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, message.toString(), e);
+                String message = "ActivityExplorerExtensionManager.getAllPages(...) _ The contribution %s has wrong index format (%d). Only 0 or positive integers are valid"; //$NON-NLS-1$
+                ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, String.format(message, ActivityExplorerExtensionManager.getId(extension), ActivityExplorerExtensionManager.getIndex(extension)), e);
             } catch (NullPointerException e) {
                 ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, e.getMessage(), null);
             } catch (Throwable e) {
                 // Unknown error from contribution
-                StringBuilder message = new StringBuilder();
-                message.append("ActivityExplorerExtensionManager.getAllPages(...) _ "); //$NON-NLS-1$
-                message.append("Unknown error occurred from contribution "); //$NON-NLS-1$
-                message.append(ActivityExplorerExtensionManager.getId(extension));
-                message.append(". See the exception stack for more details"); //$NON-NLS-1$
-                ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, message.toString(), e);
+                String message = "ActivityExplorerExtensionManager.getAllPages(...) _ Unknown error occurred from contribution %s. See the exception stack for more details"; //$NON-NLS-1$
+                ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, String.format(message, ActivityExplorerExtensionManager.getId(extension)), e);
             }
         }
         return providers;
@@ -271,24 +251,14 @@ public class ActivityExplorerExtensionManager {
                 } catch (InvalidActivityExplorerIndexException e) {
                     ActivityExplorerLoggerService.getInstance().log(IStatus.WARNING, e.toString(), e);
                 } catch (NumberFormatException e) {
-                    StringBuilder message = new StringBuilder();
-                    message.append("ActivityExplorerExtensionManager.getAllPages(...) _ "); //$NON-NLS-1$
-                    message.append("The contribution "); //$NON-NLS-1$
-                    message.append(ActivityExplorerExtensionManager.getId(page));
-                    message.append(" has wrong index format ("); //$NON-NLS-1$
-                    message.append(ActivityExplorerExtensionManager.getIndex(page));
-                    message.append("). Only 0 or positive integers are valid"); //$NON-NLS-1$
-                    ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, message.toString(), e);
+                    String message = "ActivityExplorerExtensionManager.getAllPages(...) _ The contribution %s has wrong index format (%d). Only 0 or positive integers are valid"; //$NON-NLS-1$
+                    ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, String.format(message, ActivityExplorerExtensionManager.getId(page), ActivityExplorerExtensionManager.getIndex(page)), e);
                 } catch (NullPointerException e) {
                     ActivityExplorerLoggerService.getInstance().log(IStatus.WARNING, e.getMessage(), e);
                 } catch (Throwable e) {
                     // Unknown error from contributions
-                    StringBuilder message = new StringBuilder();
-                    message.append("ActivityExplorerExtensionManager.getAllPages(...) _ "); //$NON-NLS-1$
-                    message.append("Unknown error occurred from contribution ");
-                    message.append(ActivityExplorerExtensionManager.getId(page));
-                    message.append(". See the exception stack for more details");
-                    ActivityExplorerLoggerService.getInstance().log(IStatus.WARNING, message.toString(), e);
+                    String message = "ActivityExplorerExtensionManager.getAllPages(...) _ Unknown error occurred from contribution %s. See the exception stack for more details"; //$NON-NLS-1$
+                    ActivityExplorerLoggerService.getInstance().log(IStatus.WARNING, String.format(message, ActivityExplorerExtensionManager.getId(page)), e);
                 }
             }
         }
@@ -638,14 +608,8 @@ public class ActivityExplorerExtensionManager {
                 ActivityConfiguration config = ActivityExplorerExtensionManager.parseActivityConfiguration(element);
                 sectionDescription.activities.add(new ExplorerActivity(config));
             } catch (NumberFormatException e) {
-                StringBuilder message = new StringBuilder();
-                message.append("ActivityExplorerSection.createActivities(...) _ "); //$NON-NLS-1$
-                message.append("The Activity contribution "); //$NON-NLS-1$
-                message.append(ActivityExplorerExtensionManager.getId(contributor));
-                message.append(" has wrong index format ("); //$NON-NLS-1$
-                message.append(ActivityExplorerExtensionManager.getIndex(contributor));
-                message.append("). Only integers are valid"); //$NON-NLS-1$
-                ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, message.toString(), e);
+                String message = "ActivityExplorerSection.createActivities(...) _ The Activity contribution %s has wrong index format (%d). Only integers are valid"; //$NON-NLS-1$
+                ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, String.format(message, ActivityExplorerExtensionManager.getId(contributor), ActivityExplorerExtensionManager.getIndex(contributor)), e);
             }
         }
     }
