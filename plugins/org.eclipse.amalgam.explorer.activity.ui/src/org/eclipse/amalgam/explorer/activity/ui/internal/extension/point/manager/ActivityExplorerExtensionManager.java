@@ -606,7 +606,7 @@ public class ActivityExplorerExtensionManager {
         for (IConfigurationElement element : activities) {
             try {
                 ActivityConfiguration config = ActivityExplorerExtensionManager.parseActivityConfiguration(element);
-                sectionDescription.activities.add(new ExplorerActivity(config));
+                sectionDescription.activities.add(new ExplorerActivity(config, ActivityExplorerActivator.getDefault().getPreferenceStore()));
             } catch (NumberFormatException e) {
                 String message = "ActivityExplorerSection.createActivities(...) _ The Activity contribution %s has wrong index format (%d). Only integers are valid"; //$NON-NLS-1$
                 ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, String.format(message, ActivityExplorerExtensionManager.getId(contributor), ActivityExplorerExtensionManager.getIndex(contributor)), e);

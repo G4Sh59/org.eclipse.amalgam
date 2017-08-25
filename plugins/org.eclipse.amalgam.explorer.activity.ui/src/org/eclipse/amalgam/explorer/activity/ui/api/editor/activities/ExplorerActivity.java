@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.amalgam.explorer.activity.ui.api.editor.activities;
 
-import org.eclipse.amalgam.explorer.activity.ui.ActivityExplorerActivator;
 import org.eclipse.amalgam.explorer.activity.ui.api.configuration.ActivityConfiguration;
 import org.eclipse.amalgam.explorer.activity.ui.api.editor.pages.helper.FormHelper;
 import org.eclipse.amalgam.explorer.activity.ui.internal.intf.IOrdered;
@@ -36,15 +35,16 @@ public class ExplorerActivity implements IVisibility, IOrdered {
      * The preference store where to look for visibility configuration (can be
      * changed the the end-user).
      */
-    private final IPreferenceStore preferenceStore = ActivityExplorerActivator.getDefault().getPreferenceStore();
+    private final IPreferenceStore preferenceStore;
 
     /**
      * The actual widget which represents the activity inside a section.
      */
     private ImageHyperlink widget;
 
-    public ExplorerActivity(ActivityConfiguration cfg) {
+    public ExplorerActivity(ActivityConfiguration cfg, IPreferenceStore preferenceStore) {
         this.config = cfg;
+        this.preferenceStore = preferenceStore;
     }
 
     public String getId() {
