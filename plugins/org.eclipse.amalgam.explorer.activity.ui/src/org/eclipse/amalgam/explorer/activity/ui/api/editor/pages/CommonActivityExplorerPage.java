@@ -59,6 +59,10 @@ public class CommonActivityExplorerPage extends FormPage implements IExecutableE
     protected CommonActivityExplorerPageConfiguration createConfiguration() {
         return new CommonActivityExplorerPageConfiguration();
     }
+    
+    public CommonActivityExplorerPageConfiguration getConfiguration() {
+        return config;
+    }
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {

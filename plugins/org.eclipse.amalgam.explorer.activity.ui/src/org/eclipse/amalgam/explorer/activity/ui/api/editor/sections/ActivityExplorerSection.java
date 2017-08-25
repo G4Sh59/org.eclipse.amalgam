@@ -81,6 +81,10 @@ public class ActivityExplorerSection implements IVisibility, IOrdered, IProperty
     public ActivityExplorerSection(SectionConfiguration cfg) {
         this.config = cfg;
     }
+    
+    public SectionConfiguration getConfiguration() {
+        return config;
+    }
 
     public String getId() {
         return this.config.getId();

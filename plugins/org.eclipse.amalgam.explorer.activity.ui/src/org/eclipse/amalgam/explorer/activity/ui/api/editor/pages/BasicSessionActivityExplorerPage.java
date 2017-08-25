@@ -76,7 +76,7 @@ public class BasicSessionActivityExplorerPage extends ActivityExplorerPage {
         return new BasicSessionActivityExplorerPageConfiguration();
     }
 
-    private BasicSessionActivityExplorerPageConfiguration getConfiguration() {
+    public BasicSessionActivityExplorerPageConfiguration getConfiguration() {
         return (BasicSessionActivityExplorerPageConfiguration) config;
     }
 

@@ -81,7 +81,7 @@ public class ActivityExplorerPage extends CommonActivityExplorerPage implements 
      * @return the configuration for this page, cast as an actual
      *         ActivityExplorerPageConfiguration.
      */
-    private ActivityExplorerPageConfiguration getConfiguration() {
+    public ActivityExplorerPageConfiguration getConfiguration() {
         return (ActivityExplorerPageConfiguration) config;
     }
 
