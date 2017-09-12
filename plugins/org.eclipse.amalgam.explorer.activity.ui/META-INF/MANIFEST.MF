@@ -37,4 +37,5 @@ Export-Package: org.eclipse.amalgam.explorer.activity.ui,
  org.eclipse.amalgam.explorer.activity.ui.api.editor.sections,
  org.eclipse.amalgam.explorer.activity.ui.api.hyperlinkadapter,
  org.eclipse.amalgam.explorer.activity.ui.api.manager,
- org.eclipse.amalgam.explorer.activity.ui.api.preferences
+ org.eclipse.amalgam.explorer.activity.ui.api.preferences,
+ org.eclipse.amalgam.explorer.activity.ui.internal.extension.point.manager;x-internal:=true
