@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.amalgam.explorer.activity.ui.internal.session.listeners;
 
-import java.lang.ref.WeakReference;
-
 import org.eclipse.amalgam.explorer.activity.ui.api.manager.ActivityExplorerManager;
 import org.eclipse.sirius.business.api.session.Session;
 import org.eclipse.sirius.business.api.session.SessionListener;
@@ -25,28 +23,25 @@ public class ActivityExplorerSessionListener implements SessionManagerListener {
 
 	@Override
 	public void notify(Session sessionp, int notification) {
-
-		WeakReference<Session> session = new WeakReference<Session>(sessionp);
-
 		switch (notification) {
 		case SessionListener.CLOSING:
-			ActivityExplorerManager.INSTANCE.dispatchEvent(notification, session.get());
+			ActivityExplorerManager.INSTANCE.dispatchEvent(notification, sessionp);
 			break;
 		case SessionListener.SELECTED_VIEWS_CHANGE_KIND:
-			ActivityExplorerManager.INSTANCE.dispatchEvent(notification, session.get());
+			ActivityExplorerManager.INSTANCE.dispatchEvent(notification, sessionp);
 			break;
 		case SessionListener.REPRESENTATION_CHANGE:
-			ActivityExplorerManager.INSTANCE.dispatchEvent(notification, session.get());
+			ActivityExplorerManager.INSTANCE.dispatchEvent(notification, sessionp);
 			break;
 		case SessionListener.OPENED:
 			break;
 		case SessionListener.DIRTY:
 		case SessionListener.SYNC:
 		case SessionListener.SEMANTIC_CHANGE: // Listening to changes to mark
-			ActivityExplorerManager.INSTANCE.dispatchEvent(notification, session.get());
+			ActivityExplorerManager.INSTANCE.dispatchEvent(notification, sessionp);
 			break;
 		case SessionListener.REPLACED:
-			ActivityExplorerManager.INSTANCE.dispatchEvent(notification, session.get());
+			ActivityExplorerManager.INSTANCE.dispatchEvent(notification, sessionp);
 			break;
 		}
 	}
