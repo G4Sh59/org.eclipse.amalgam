@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.amalgam.explorer.activity.ui.ActivityExplorerActivator;
 import org.eclipse.amalgam.explorer.activity.ui.api.configuration.SectionConfiguration;
 import org.eclipse.amalgam.explorer.activity.ui.api.editor.ActivityExplorerEditor;
 import org.eclipse.amalgam.explorer.activity.ui.api.editor.activities.ExplorerActivity;
@@ -50,7 +49,7 @@ public class ActivityExplorerSection implements IVisibility, IOrdered, IProperty
      * The preference store where to look for visibility configuration (can be
      * changed the the end-user).
      */
-    private final IPreferenceStore preferenceStore = ActivityExplorerActivator.getDefault().getPreferenceStore();
+    private final IPreferenceStore preferenceStore;
 
     /**
      * The parent page in which the section is displayed.
@@ -78,8 +77,9 @@ public class ActivityExplorerSection implements IVisibility, IOrdered, IProperty
      * @param cfg
      *            the configuration.
      */
-    public ActivityExplorerSection(SectionConfiguration cfg) {
+    public ActivityExplorerSection(SectionConfiguration cfg, IPreferenceStore preferenceStore) {
         this.config = cfg;
+        this.preferenceStore = preferenceStore;
     }
     
     public SectionConfiguration getConfiguration() {

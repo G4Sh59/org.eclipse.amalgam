@@ -401,7 +401,7 @@ public class ActivityExplorerPage extends CommonActivityExplorerPage implements 
     protected void handleContributedSectionsFor(IConfigurationElement contributor) {
         // create a Activity Explorer section
         SectionConfiguration cfg = ActivityExplorerExtensionManager.parseSectionConfiguration(contributor);
-        ActivityExplorerSection section = new ActivityExplorerSection(cfg) {
+        ActivityExplorerSection section = new ActivityExplorerSection(cfg, ActivityExplorerActivator.getDefault().getPreferenceStore()) {
             @Override
             protected IAction[] getToolBarActions() {
                 ActivityExplorerPage page = ActivityExplorerPage.this;

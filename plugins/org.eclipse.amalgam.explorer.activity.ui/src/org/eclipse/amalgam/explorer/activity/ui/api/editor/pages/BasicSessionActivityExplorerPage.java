@@ -249,7 +249,7 @@ public class BasicSessionActivityExplorerPage extends ActivityExplorerPage {
 
         // create the session
       SectionConfiguration cfg = ActivityExplorerExtensionManager.parseSectionConfiguration(contributor_p);
-	  ActivityExplorerSection newSection = new ActivityExplorerSection(cfg) {
+	  ActivityExplorerSection newSection = new ActivityExplorerSection(cfg, ActivityExplorerActivator.getDefault().getPreferenceStore()) {
             @Override
             protected IAction[] getToolBarActions() {
 
