@@ -13,23 +13,21 @@ package org.eclipse.amalgam.explorer.activity.ui.api.actions;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * A concrete class of AbstractDescriptionAction
- * 
- *
+ * Concrete implements of AbstractDescriptionAction which takes a fixed string
+ * as description.
  */
 public class DescriptionAction extends AbstractDescriptionAction {
+    private final String description;
 
-	public DescriptionAction(Shell shell_p, String description_p) {
-		super(shell_p);
-		this.description = description_p;
-		setEnabled(null != getDescriptionContent());
-	}
+    public DescriptionAction(Shell shell, String description) {
+        super(shell);
+        this.description = description;
+        setEnabled(null != getDescriptionContent());
+    }
 
-	private String description;
-
-	@Override
-	protected String getDescriptionContent() {
-		return description;
-	}
+    @Override
+    protected String getDescriptionContent() {
+        return description;
+    }
 
 }

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.amalgam.explorer.activity.ui.api.editor.pages;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -246,10 +247,9 @@ public class BasicSessionActivityExplorerPage extends ActivityExplorerPage {
      */
     @Override
     protected void handleContributedSectionsFor(IConfigurationElement contributor_p) {
-
-        // create the session
-      SectionConfiguration cfg = ActivityExplorerExtensionManager.parseSectionConfiguration(contributor_p);
-	  ActivityExplorerSection newSection = new ActivityExplorerSection(cfg, ActivityExplorerActivator.getDefault().getPreferenceStore()) {
+        // create a Activity Explorer section
+        SectionConfiguration cfg = ActivityExplorerExtensionManager.parseSectionConfiguration(contributor_p);
+        ActivityExplorerSection section = new ActivityExplorerSection(cfg, ActivityExplorerActivator.getDefault().getPreferenceStore()) {
             @Override
             protected IAction[] getToolBarActions() {
 
@@ -259,23 +259,16 @@ public class BasicSessionActivityExplorerPage extends ActivityExplorerPage {
                 if (!isFiltering()) {
                     toolbarActions = new IAction[] { new DescriptionAction(BasicSessionActivityExplorerPage.this.getSite().getShell(), getDescription()), };
                 }
-
                 return toolbarActions;
             }
         };
 
         // inserts sections in page
-        boolean value = getSections().add(newSection);
-        if (!value) {
-
-            StringBuilder message = new StringBuilder();
-            message.append("The declared section: ");
-            message.append(newSection.getId());
-            message.append(" has the same index of a another section. Changes it!");
-
-            ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, message.toString(), null);
+        boolean added = getConfiguration().getSections().add(section);
+        if (!added) {
+            String message = "The declared section %s has the same index as another section. Change it!";
+            ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, String.format(message, section.getId()), null);
         }
-
     }
 
     /**
@@ -351,7 +344,8 @@ public class BasicSessionActivityExplorerPage extends ActivityExplorerPage {
     @Override
     public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
         super.setInitializationData(cfig, propertyName, data);
-        // Complete the page's configuration with BasicSessionActivityExplorerPage-specific elements
+        // Complete the page's configuration with
+        // BasicSessionActivityExplorerPage-specific elements
         ActivityExplorerExtensionManager.parseBasicSessionActivityExplorerPageConfiguration(cfig, getConfiguration());
     }
 

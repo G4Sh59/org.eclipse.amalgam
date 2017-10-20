@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Sash;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.IFormPage;
@@ -401,16 +402,13 @@ public class ActivityExplorerPage extends CommonActivityExplorerPage implements 
     protected void handleContributedSectionsFor(IConfigurationElement contributor) {
         // create a Activity Explorer section
         SectionConfiguration cfg = ActivityExplorerExtensionManager.parseSectionConfiguration(contributor);
-        ActivityExplorerSection section = new ActivityExplorerSection(cfg, ActivityExplorerActivator.getDefault().getPreferenceStore()) {
-            @Override
-            protected IAction[] getToolBarActions() {
-                ActivityExplorerPage page = ActivityExplorerPage.this;
-                return new IAction[] { new DescriptionAction(page.getSite().getShell(), getConfiguration().getDescription()) };
-            }
-        };
-
+        ActivityExplorerSection section = new ActivityExplorerSection(cfg, ActivityExplorerActivator.getDefault().getPreferenceStore());
         // sort
-        getConfiguration().getSections().add(section);
+        boolean added = getConfiguration().getSections().add(section);
+        if (!added) {
+            String message = "The declared section %s has the same index as another section. Change it!";
+            ActivityExplorerLoggerService.getInstance().log(IStatus.ERROR, String.format(message, section.getId()), null);
+        }
     }
 
     /**
