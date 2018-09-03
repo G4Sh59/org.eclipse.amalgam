@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.amalgam.explorer.activity.ui.api.dialog;
 
+import java.net.URL;
+
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -21,11 +24,16 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.ui.forms.HyperlinkGroup;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * Dialog that opens a popup dialog to display content in a {@link FormText}.
@@ -65,6 +73,7 @@ public class DescriptionDialog extends PopupDialog {
 	private Point _anchor;
 	private Composite _composite;
 	private FormToolkit _toolkit;
+	private Form form;
 
 	private String _content;
 
@@ -111,8 +120,8 @@ public class DescriptionDialog extends PopupDialog {
 	protected Control createDialogArea(Composite parent) {
 		_composite = (Composite) super.createDialogArea(parent);
 
-		ScrolledForm form = _toolkit.createScrolledForm(_composite);
-		_toolkit.decorateFormHeading(form.getForm());
+		_toolkit = new FormToolkit(getShell().getDisplay());
+		form = _toolkit.createForm(_composite);
 
 		// add a Close button to the toolbar
 		form.getToolBarManager().add(new CloseAction());
@@ -125,11 +134,7 @@ public class DescriptionDialog extends PopupDialog {
 		layout.verticalSpacing = 10;
 		form.getBody().setLayout(layout);
 
-		FormText richText = org.eclipse.amalgam.explorer.activity.ui.api.editor.pages.helper.FormHelper.createRichText(
-				_toolkit, form.getBody(), _content, null);
-		TableWrapData layoutData = new TableWrapData();
-		layoutData.maxWidth = 400;
-		richText.setLayoutData(layoutData);
+		useFormTextURL();
 		return _composite;
 	}
 
@@ -159,4 +164,44 @@ public class DescriptionDialog extends PopupDialog {
 		}
 		return point;
 	}
+	
+	/**
+	 * Links activated
+	**/
+	private void useFormTextURL(){
+
+		HyperlinkGroup group = new HyperlinkGroup(form.getDisplay());
+		group.setForeground(form.getDisplay().getSystemColor(SWT.COLOR_BLUE));
+		group.setActiveForeground(form.getDisplay().getSystemColor(SWT.COLOR_BLUE));
+
+		TableWrapData layoutData = new TableWrapData();
+		layoutData.maxWidth = 400;
+		FormText richText = org.eclipse.amalgam.explorer.activity.ui.api.editor.pages.helper.FormHelper.createRichText(
+				_toolkit, form.getBody(), _content, null);
+		richText.setHyperlinkSettings(group);
+		richText.setLayoutData(layoutData);
+		richText.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e){
+				System.out.println("Link activated: " + e.getHref());
+				String href = (String)e.getHref();
+				if (href.startsWith("http")) {
+					int browserStyle = IWorkbenchBrowserSupport.LOCATION_BAR
+							| IWorkbenchBrowserSupport.AS_EXTERNAL
+							| IWorkbenchBrowserSupport.STATUS
+							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
+					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+					try {
+						browserSupport.createBrowser(browserStyle, null, null, null)
+						.openURL(new URL(href));
+					} catch (Exception ex) {
+						Status status = new Status(Status.ERROR, null,
+								"Unable to open external web browser: " + ex.getMessage(), ex);
+						StatusManager.getManager().handle(status, StatusManager.SHOW);
+					}
+				}
+
+			}
+		});
+	}
+
 }
